@@ -1,0 +1,100 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    background-color: #58C1F5;
+}
+
+/* Navigation */
+
+.nav_bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: 10px;
+}
+
+.nav_bar a {
+    margin: 40px
+}
+
+/* Register */
+
+.register {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.register_form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 300px
+}
+
+.register_form input {
+    margin: 20px 0;
+    width: 300px
+}
+
+.register_form {
+    text-align: start;
+    
+}
+/* Balance */
+
+.balance {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.balance_meter {
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: antiquewhite;
+}
+
+.expenses {
+    margin-top: 100px;
+}
+
+.expense_button {
+    outline: none;
+    text-decoration: none;
+    border: 1px solid white;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    background-color: rgb(124, 124, 235);
+}
+.expense_button:active {
+    background-color: blueviolet;
+}
+
+.new_expense {
+    position: fixed;
+    top: 50%;
+    right: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: azure;
+    width: 1000px;
+    height: 100px;
+    transform: translate(50%, -50%);
+}
+
+/* Balance Meter */
+
