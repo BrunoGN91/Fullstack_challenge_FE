@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import useApi from '../../hooks/useApi'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
 const axiosConfig = {
     headers: {
@@ -12,9 +13,12 @@ const axiosConfig = {
   };
 
 
-const NewExpense = () => {
+const NewExpense = ({setRefresh}) => {
 
-    const { loggedUser } = useApi()
+    const navigate = useNavigate()
+
+    const {  } = useApi();
+    const logged = sessionStorage.getItem("token")
 
     const [newExpense, setNewExpense] = useState(false)
     const [expense, setExpense] = useState({
@@ -23,13 +27,6 @@ const NewExpense = () => {
         
     })
 
-    useEffect(() => {
-        if(newExpense) {
-            document.body.style.backgroundColor = "#414141"
-        } else {
-            document.body.style.backgroundColor = "#58C1F5"
-        }
-    },[newExpense])
 
 const handleSubmit = (e) => {
     e.preventDefault()
@@ -45,20 +42,22 @@ const handleSubmit = (e) => {
             method: "POST",
             url: URL_OPERATION_ENDPOINT,
             headers: axiosConfig,
-            data: JSON.stringify({...expense, users_fk: loggedUser})
+            data: JSON.stringify({...expense, users_fk: logged})
          }).then(res => {
              return res
          }).catch(e => {
              console.log("error");
          })
-        
+         setNewExpense(false);
+         setExpense({
+             description: '',
+             value: 0
+         });
+         setRefresh(true)
         }
-        setNewExpense(false);
-        setExpense({
-            description: '',
-            value: 0
-        })
     }
+
+
 
   return (
     <>
@@ -91,6 +90,10 @@ const handleSubmit = (e) => {
     ) : null}
     </>
   )
+}
+
+export {
+
 }
 
 export default NewExpense

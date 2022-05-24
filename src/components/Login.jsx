@@ -22,7 +22,7 @@ const Login = () => {
         password: '',
     })
     
-    const { setLoggedUser, setLogged } = useApi()
+    const { setLoggedUser, setLogged, setLoggedNewUser } = useApi()
 
     const handleSee = (e) => {
         e.preventDefault()
@@ -38,8 +38,9 @@ const Login = () => {
             data: JSON.stringify(user)
         }).then(res => {
             
-            setLoggedUser(res.data.id);
-            setLogged(true)
+            setLoggedUser(res.data.id)
+            setLoggedNewUser(res.data)
+            sessionStorage.setItem("token", res.data.id)
             navigate('/balance')
         })
      }

@@ -5,7 +5,6 @@ import axios from 'axios'
 
 const Register = () => {
     const navigate = useNavigate()
-    console.log(history);
     const {users} = useApi();
 
     const lastId = Object.values(users).map(id => {

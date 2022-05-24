@@ -1,22 +1,25 @@
-import React, {useContext} from 'react'
+import React, {useContext, useEffect} from 'react'
+import axios from 'axios'
 import useApi from '../../hooks/useApi'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 
 
-const BalanceMeter = () => {
-    const { } = useApi()
+const BalanceMeter = ({ refresh }) => {
+    const { loggedNewUser } = useApi()
+    const logged = sessionStorage.getItem("token");
 
+ 
   return (
    <>
-   <div>
+   <div className='balance_meter'>
             <CircularProgressbar
             styles={buildStyles({
                 pathColor:'#3b82f6',
                 textColor:'#3b82f6'
             })}
-            
-            value={100}
-            >{100}</CircularProgressbar> 
+            text={`${loggedNewUser.balance} %`}
+            value={loggedNewUser}
+            >{loggedNewUser}</CircularProgressbar> 
         </div>
    </>
   )

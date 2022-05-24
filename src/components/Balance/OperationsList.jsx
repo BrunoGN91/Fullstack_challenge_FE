@@ -14,32 +14,38 @@ const axiosConfig = {
     }
   };
 
-const OperationsList = () => {
+const OperationsList = ({refresh, setRefresh}) => {
 
-    const { loggedUser } = useApi()
+    const {  } = useApi()
     const [list, setList] = useState([])
+    const logged = sessionStorage.getItem("token")
 
     useEffect(() => {
-        axios({
-            method: "POST",
-            url: "http://localhost:8888/api/setOperationList",
-            headers: axiosConfig,
-            data: JSON.stringify(loggedUser)
-        }).then(res => {
-            setList(res.data)
-        })
-    },[])
-console.log(list);
+        if(logged !== null) {
+            axios({
+                method: "POST",
+                url: "http://localhost:8888/api/setOperationList",
+                headers: axiosConfig,
+                data: JSON.stringify(logged)
+            }).then(res => {
+                setList(res.data)
+            })
+            setRefresh(false)
+        }
+      
+    },[refresh])
+
+
   return (
     <>
+    <div className='operations_list'>
     {list.map(item => (
         <>
-        <div>
-            {item.description}
-            {item.total}
-        </div>
+        <p>{item.description}</p>
+        <h2>{item.total}</h2>
         </>
     ))}
+    </div>
     </>
   )
 }
