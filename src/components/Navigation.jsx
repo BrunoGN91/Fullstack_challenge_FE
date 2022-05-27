@@ -10,14 +10,12 @@ import NotFound from './NotFound'
 
 const Navigation = () => {
 
-  const { loggedUser } = useApi()
+  const { loggedNewUser } = useApi()
  
   const logged = sessionStorage.getItem("token")
 
   const handleLogOut = () => {
-    window.location.reload(true)
     sessionStorage.removeItem("token");
-   
   }
 
   return (
@@ -31,13 +29,11 @@ const Navigation = () => {
             >Log Out</Link>
           ) : <Link to="/register">Register</Link>}
       </div>
-
-
     <Routes>
         <Route exact path='/' component={Navigation} element={<Home />} /> 
         <Route path='/register' element={<Register/>} />
         <Route path='/login' element={<Login/>} />
-        <Route path='/balance' element={logged !== 0 ? <BalanceManager/> : <NotFound />} />
+        <Route path='/balance' element={loggedNewUser.balance !== undefined ? <BalanceManager/> : <NotFound />} />
 
     </Routes>
     </BrowserRouter>

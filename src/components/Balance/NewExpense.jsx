@@ -44,6 +44,7 @@ const handleSubmit = (e) => {
             headers: axiosConfig,
             data: JSON.stringify({...expense, users_fk: logged})
          }).then(res => {
+            
              return res
          }).catch(e => {
              console.log("error");

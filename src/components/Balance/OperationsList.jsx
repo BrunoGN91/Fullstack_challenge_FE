@@ -4,7 +4,6 @@ import useApi from '../../hooks/useApi'
 
 
 
-
 const axiosConfig = {
     headers: {
         'Content-Type' : 'application/json',
@@ -13,36 +12,41 @@ const axiosConfig = {
   
     }
   };
+  
 
-const OperationsList = ({refresh, setRefresh}) => {
+const OperationsList = ({ list, setRefresh }) => {
 
     const {  } = useApi()
-    const [list, setList] = useState([])
-    const logged = sessionStorage.getItem("token")
+ 
+    const handleRemoveExpense = async (id) => {
+        let remove = await axios({
+            method: "DELETE",
+            url: `http://localhost:8888/api/operationsList/${id}`,
+            headers: axiosConfig
+        })
+        setRefresh(true)
+        return remove
+    }
 
-    useEffect(() => {
-        if(logged !== null) {
-            axios({
-                method: "POST",
-                url: "http://localhost:8888/api/setOperationList",
-                headers: axiosConfig,
-                data: JSON.stringify(logged)
-            }).then(res => {
-                setList(res.data)
-            })
-            setRefresh(false)
-        }
-      
-    },[refresh])
+    const handleEditExpense = async () => {
 
+    } 
 
   return (
     <>
     <div className='operations_list'>
     {list.map(item => (
         <>
+        <div className='expense_item'>
         <p>{item.description}</p>
         <h2>{item.total}</h2>
+        <h3
+        
+        >Edit</h3>
+        <button
+            onClick={() => handleRemoveExpense(item.id)}
+        >Remove</button>
+        </div>
         </>
     ))}
     </div>

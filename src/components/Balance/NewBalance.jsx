@@ -38,7 +38,6 @@ const NewBalance = () => {
             }).then(res => {
                 setLoggedNewUser(res.data)
             })
-           
         }
     }
 
