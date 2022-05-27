@@ -13,12 +13,12 @@ const axiosConfig = {
   };
 
 
-const NewExpense = ({setRefresh}) => {
+const NewExpense = () => {
 
     const navigate = useNavigate()
 
-    const {  } = useApi();
-    const logged = sessionStorage.getItem("token")
+    const { setRefresh, loggedNewUser, refresh } = useApi();
+    
 
     const [newExpense, setNewExpense] = useState(false)
     const [expense, setExpense] = useState({
@@ -42,20 +42,18 @@ const handleSubmit = (e) => {
             method: "POST",
             url: URL_OPERATION_ENDPOINT,
             headers: axiosConfig,
-            data: JSON.stringify({...expense, users_fk: logged})
+            data: JSON.stringify({...expense, users_fk: loggedNewUser.id})
          }).then(res => {
-            
-             return res
+            setExpense({
+                description: '',
+                value: 0
+            });
          }).catch(e => {
              console.log("error");
          })
-         setNewExpense(false);
-         setExpense({
-             description: '',
-             value: 0
-         });
-         setRefresh(true)
         }
+        setNewExpense(false);
+        setRefresh(true)
     }
 
 

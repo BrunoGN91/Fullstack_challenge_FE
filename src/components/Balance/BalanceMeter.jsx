@@ -3,9 +3,29 @@ import axios from 'axios'
 import useApi from '../../hooks/useApi'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 
-const BalanceMeter = ({ available, percentage, refresh, totalExpenses }) => {
+const BalanceMeter = ({ list  }) => {
 
     const { loggedNewUser } = useApi()
+
+    const [totalExpenses, setTotalExpenses] = useState(0)
+    const [percentage, setPercentage] = useState(0)
+    const [available, setAvailable] = useState(0)
+
+    
+const handleTotal =  () => {
+  let total = 0
+  let data = list.map(expense => {
+      setTotalExpenses(total += expense.total)
+  })
+  return data
+}
+    useEffect(() => {
+      handleTotal()
+      setAvailable(loggedNewUser.balance - totalExpenses)
+      const newPercentage = ((loggedNewUser.balance - totalExpenses) / loggedNewUser.balance * 100).toFixed(2)
+      setPercentage(newPercentage)
+      console.log(list);
+    },[list])
  
   return (
    <>
@@ -21,7 +41,7 @@ const BalanceMeter = ({ available, percentage, refresh, totalExpenses }) => {
                 textColor:percentage > 0 ? '#3b82f6' : '#f6573b'
             })}
             value={percentage}
-            text={100}
+            text={`${percentage}`}
             >
               </CircularProgressbar> 
             <h4> Surplus: <span className={percentage > 0 ? '' : `negative`}>$ {(available.toFixed(2))}</span></h4>

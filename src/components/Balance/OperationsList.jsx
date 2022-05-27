@@ -14,18 +14,21 @@ const axiosConfig = {
   };
   
 
-const OperationsList = ({ list, setRefresh }) => {
+const OperationsList = ({ list }) => {
 
-    const {  } = useApi()
+    const { setRefresh } = useApi()
  
-    const handleRemoveExpense = async (id) => {
-        let remove = await axios({
+    const handleRemoveExpense = (id) => {
+        axios({
             method: "DELETE",
             url: `http://localhost:8888/api/operationsList/${id}`,
             headers: axiosConfig
+        }).then(res => {
+          console.log(res);
+        }).catch(e => {
+          console.log("error");
         })
         setRefresh(true)
-        return remove
     }
 
     const handleEditExpense = async () => {

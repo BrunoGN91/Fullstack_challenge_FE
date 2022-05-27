@@ -8,6 +8,7 @@ const ApiProvider = ({children}) => {
   const [users, setUsers] = useState("");
   const [loggedUser, setLoggedUser] = useState(0)
   const [loggedNewUser, setLoggedNewUser] = useState({})
+  const [refresh, setRefresh] = useState(false)
   
   return (
       <ApiContext.Provider
@@ -16,7 +17,9 @@ const ApiProvider = ({children}) => {
         loggedUser,
         setLoggedUser,
         setLoggedNewUser,
-        loggedNewUser
+        loggedNewUser,
+        refresh,
+        setRefresh
       }}
       >
     {children}

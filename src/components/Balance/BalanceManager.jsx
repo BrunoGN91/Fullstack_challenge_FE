@@ -21,53 +21,49 @@ const axiosConfig = {
 const BalanceManager = () => {
 
 const navigate = useNavigate()
-const { loggedNewUser } = useApi()
+const { loggedNewUser, refresh, setRefresh } = useApi()
 const logged = sessionStorage.getItem("token")
 
-const [refresh, setRefresh] = useState(false)
-const [totalExpenses, setTotalExpenses] = useState(0)
 const [list, setList] = useState([])
-const [percentage, setPercentage] = useState(0)
-const [available, setAvailable] = useState(0)
 
-const handleTotal = () => {
-  let total = 0
-  let data = list.map(expense => {
-      setTotalExpenses(total += expense.total)
-  })
-  return data
-}
+
 
 useEffect(() => {
-  axios({
-    method: "GET",
-    url: `http://localhost:8888/api/usersOperations/${loggedNewUser.id}`,
-    headers: axiosConfig
-  }).then(data => {
-    setList(data.data)
-  })
-  handleTotal()
+  const handleInitialFetch = async () => {
+    try {
+      let data = await axios({
+        method: "GET",
+        url: `http://localhost:8888/api/usersOperations/${loggedNewUser.id}`,
+        headers: axiosConfig
+      })
+      setList(data.data)
+      console.log();
+    } catch (error) {
+    }
+  }
+  handleInitialFetch()
+  
 },[])
 
 useEffect(() => {
-  axios({
-        method: "POST",
-        url: "http://localhost:8888/api/setOperationList",
-        headers: axiosConfig,
-        data: JSON.stringify(logged)
-    }).then(res => {
-      setList(res.data)
-      handleTotal()
-    })
-    setRefresh(false);
+  const handleAsyncPost = async () => {
+    try {
+        let awaitData = await axios({
+          method: "POST",
+          url: "http://localhost:8888/api/setOperationList",
+          headers: axiosConfig,
+          data: JSON.stringify(logged)
+      })
+      setList(awaitData.data)
+      return awaitData
+    } catch (error) {
+    }
+  }
+  handleAsyncPost()
+  setRefresh(false);
 },[refresh])
 
-useEffect(() => {
-  setAvailable(loggedNewUser.balance - totalExpenses)
-  const newPercentage = ((loggedNewUser.balance - totalExpenses) / loggedNewUser.balance * 100).toFixed(2)
-  setPercentage(newPercentage)
-  
-},[totalExpenses])
+
 
 
   return (
@@ -77,9 +73,7 @@ useEffect(() => {
     ) : (
       <div className='balance'>
       <BalanceMeter
-      percentage={percentage}
-      available={available}
-      totalExpenses={totalExpenses}
+      list={list}
       refresh={refresh}
       />
       <NewExpense
@@ -87,7 +81,6 @@ useEffect(() => {
       />
       <OperationsList
       list={list}
-      setTotalExpenses={setTotalExpenses}
       refresh={refresh}
       setRefresh={setRefresh}
       />
