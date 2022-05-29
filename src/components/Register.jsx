@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
 import useApi from '../hooks/useApi';
-import axios from 'axios'
+import axios from 'axios';
+import Eye from "../../public/images/eye.png"
+import Hidden from "../../public/images/hidden.png"
 
 const Register = () => {
     const navigate = useNavigate()
@@ -14,9 +16,6 @@ const Register = () => {
 
     const [see, setSee] = useState(false);
     const [resee, setReSee] = useState(false);
-
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('')
     const [user, setUser] = useState({
         email:'',
         password: '',
@@ -33,7 +32,7 @@ const Register = () => {
     }
     const handleReSee = (e) => {
         e.preventDefault()
-        setSee(!resee)
+        setReSee(!resee)
     }
 
     let axiosConfig = {
@@ -74,9 +73,15 @@ const Register = () => {
         <label htmlFor="" >Email</label>
         <input type="text" onChange={(e) => setUser({...user, email: e.target.value})}/>
         <label htmlFor="">Password</label>
-        <input type={see ? "text" : "password"} onChange={(e) => setUser({...user, password: e.target.value})} />
-        <label htmlFor="">Repassword</label>
-        <input type="password" />
+            <div className='password'>
+                <input type={see ? "text" : "password"} onChange={(e) => setUser({...user, password: e.target.value})} />
+                <img onClick={handleSee}className="password_eye" src={!see ? Eye : Hidden} alt="" />
+            </div>
+        <label htmlFor="">Re-password</label>
+        <div className='password'>
+        <input type={resee ? "text" : "password"} />
+        <img onClick={handleReSee}className="password_eye" src={!resee ? Eye : Hidden} alt="" />
+        </div>
         <button type='submit'>Submit</button>
     </form>
     </div>

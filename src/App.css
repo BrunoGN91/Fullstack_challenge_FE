@@ -18,9 +18,44 @@ button {
     color: black
 }
 
-label {
-    color: black
+/* Home */
+
+.home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
+
+.home h2 {
+    font-size: 2rem;
+}
+.home h3 {
+    font-size: 1rem;
+    margin-top: 20px;
+}
+
+.home_links {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.home_links a {
+    text-decoration: none;
+    text-transform: uppercase;
+    margin: 50px
+}
+
+.home_links a:hover {
+    color: #3b82f6;
+    font-size: 1.1rem;
+}
+
+
 
 /* Navigation */
 
@@ -47,18 +82,62 @@ label {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
-    width: 300px
+    align-items: center;
+    width: 300px;
+    position: relative;
+}
+
+.register_form label {
+    color: white;
+    font-size: 1rem;
+    text-transform: uppercase;
+    margin: 15px 0px;
+
 }
 
 .register_form input {
     margin: 20px 0;
-    width: 300px
+    width: 300px;
+    padding: 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    border: none;
+  
 }
 
-.register_form {
-    text-align: start;
-    
+.password {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: centers;
+    position: relative;
+}
+
+.password img {
+    width: 20px;
+    position: absolute;
+    top: 50%;
+    right: 3%;
+    transform: translate(-50%, -50%);
+}
+
+.password img:hover {
+    cursor: pointer;
+}
+
+.register_form button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.register_form button:hover {
+    background-color: #3b82f6;
+    color: white;
+    cursor: pointer;
 }
 /* Balance */
 
@@ -71,20 +150,25 @@ label {
 
 .expense_button {
     position: fixed;
-    bottom: 10%;
-    right: 10%;
+    bottom: 2%;
+    right: 2%;
     margin-top: 20px;
     outline: none;
     text-decoration: none;
     border: 2px solid white;
+    transform: translate(-50%,-50%);
     border-radius: 10px;
     padding: 10px;
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     cursor: pointer;
     color: white;
     background-color: #3b82f6;
+}
+
+.expense_button img {
+    width: 40px;
 }
 .expense_button:active {
     background-color: blueviolet;
@@ -102,6 +186,44 @@ label {
     width: 1000px;
     height: 100px;
     transform: translate(50%, -50%);
+}
+
+/* New Balance */
+
+.new_balance {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.new_balance form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.new_balance label {
+    text-transform: uppercase;
+    margin: 20px
+}
+
+.new_balance input {
+    padding: 10px;
+    text-decoration: none;
+    appearance: none;
+    border: none;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    border-radius: 10px;
+
+}
+
+.new_balance button {
+    padding: 5px;
+    text-transform: uppercase;
+    margin-top: 20px;
 }
 
 /* Balance Meter */
@@ -154,4 +276,32 @@ label {
 
 .expense_item p {
     text-align: left;
+}
+
+.remove_button {
+    width: 100px;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    border-radius: 15px;
+    border: none
+}
+
+.remove_button:hover {
+    background-color: #f06851;
+    color: white;
+    cursor: pointer;
+}
+
+.edit_button {
+    width: 100px;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    border-radius: 15px;
+    border: none
+}
+
+.edit_button:hover {
+    background-color: #3b82f6;
+    color: white;
+    cursor: pointer;
 }

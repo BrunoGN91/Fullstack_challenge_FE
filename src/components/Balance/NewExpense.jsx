@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import useApi from '../../hooks/useApi'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
+import Plus from "../../../public/images/plus.png"
 
 const axiosConfig = {
     headers: {
@@ -63,7 +64,7 @@ const handleSubmit = (e) => {
     <button
     className='expense_button'
     onClick={() => setNewExpense(true)}>
-    New Expense 
+    <img src={Plus} alt="" />
     </button>
     {newExpense ? (
         <div className='new_expense'>

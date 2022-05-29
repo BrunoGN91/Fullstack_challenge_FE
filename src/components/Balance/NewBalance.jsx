@@ -43,6 +43,7 @@ const NewBalance = () => {
 
   return (
     <>
+    <div className='new_balance'>
     <h2>Add your balance to get started!</h2>
     <form 
     action=""
@@ -52,6 +53,7 @@ const NewBalance = () => {
         <input type="number" onChange={(e) => { setBalance(e.target.value)}}/>
         <button>Submit</button>
     </form>
+    </div>
     </>
   )
 }

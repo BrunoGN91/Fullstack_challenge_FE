@@ -4,6 +4,7 @@ import useApi from '../../hooks/useApi'
 
 
 
+
 const axiosConfig = {
     headers: {
         'Content-Type' : 'application/json',
@@ -42,11 +43,12 @@ const OperationsList = ({ list }) => {
         <>
         <div className='expense_item'>
         <p>{item.description}</p>
-        <h2>{item.total}</h2>
-        <h3
-        
-        >Edit</h3>
+        <h2>$ {(item.total).toFixed(2)}</h2>
         <button
+        className='edit_button'
+        >Edit</button>
+        <button
+         className='remove_button'
             onClick={() => handleRemoveExpense(item.id)}
         >Remove</button>
         </div>
