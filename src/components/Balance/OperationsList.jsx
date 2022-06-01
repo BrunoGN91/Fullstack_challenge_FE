@@ -15,7 +15,7 @@ const axiosConfig = {
   };
   
 
-const OperationsList = ({ list }) => {
+const OperationsList = ({ list, spinner }) => {
 
     const { setRefresh } = useApi()
  
@@ -35,15 +35,27 @@ const OperationsList = ({ list }) => {
     const handleEditExpense = async () => {
 
     } 
-
+console.log(list);
   return (
     <>
     <div className='operations_list'>
-    {list.map(item => (
+      {list.length !== 0 ? (
+        <>
+        <div className='expense_items_titles'>
+          <h2>Name</h2>
+          <h3>Price</h3>
+          <h3>Time</h3>
+          <h4>Actions</h4>
+        </div>
+        </>
+      ) : <h2>Nothing</h2>}
+    {spinner ? (
+      list.map(item => (
         <>
         <div className='expense_item'>
         <p>{item.description}</p>
         <h2>$ {(item.total).toFixed(2)}</h2>
+        <h4>{(new Date(item.lastUpdated)).toLocaleDateString('en-US')}</h4>
         <button
         className='edit_button'
         >Edit</button>
@@ -53,7 +65,7 @@ const OperationsList = ({ list }) => {
         >Remove</button>
         </div>
         </>
-    ))}
+    )) ) : null}
     </div>
     </>
   )
