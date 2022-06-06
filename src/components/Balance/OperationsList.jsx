@@ -1,8 +1,14 @@
 import axios from 'axios'
 import React, {useState, useEffect} from 'react'
 import useApi from '../../hooks/useApi'
+import NewExpense from './NewExpense';
 
-
+// Category icons
+import House from "../../../public/images/home.png"
+import Food from "../../../public/images/dish.png"
+import Health from "../../../public/images/heartbeat.png"
+import Savings from "../../../public/images/piggy-bank.png"
+import Other from "../../../public/images/more.png"
 
 
 const axiosConfig = {
@@ -15,15 +21,16 @@ const axiosConfig = {
   };
   
 
-const OperationsList = ({ list, spinner }) => {
+const OperationsList = ({ list, spinner, setEdit }) => {
 
-    const { setRefresh } = useApi()
+    const { setRefresh, loggedUser } = useApi()
  
     const handleRemoveExpense = (id) => {
         axios({
-            method: "DELETE",
+            method: "PUT",
             url: `http://localhost:8888/api/operationsList/${id}`,
-            headers: axiosConfig
+            headers: axiosConfig,
+            data: JSON.stringify(loggedUser)
         }).then(res => {
           console.log(res);
         }).catch(e => {
@@ -32,10 +39,7 @@ const OperationsList = ({ list, spinner }) => {
         setRefresh(true)
     }
 
-    const handleEditExpense = async () => {
 
-    } 
-console.log(list);
   return (
     <>
     <div className='operations_list'>
@@ -44,6 +48,7 @@ console.log(list);
         <div className='expense_items_titles'>
           <h2>Name</h2>
           <h3>Price</h3>
+          <h3>Category</h3>
           <h3>Time</h3>
           <h4>Actions</h4>
         </div>
@@ -55,9 +60,20 @@ console.log(list);
         <div className='expense_item'>
         <p>{item.description}</p>
         <h2>$ {(item.total).toFixed(2)}</h2>
+        <div className='tooltip'>
+          <span className='tooltipText'>{item.category}</span>
+        <img 
+        src={item.category === "house" ? House :
+                  item.category === "savings" ? Savings :
+                  item.category === "other" ? Other :
+                  item.category === "food" ? Food :
+                  item.category === "health" ? Health : null
+      } alt="" />
+      </div>
         <h4>{(new Date(item.lastUpdated)).toLocaleDateString('en-US')}</h4>
         <button
         className='edit_button'
+        onClick={() => setEdit(item)}
         >Edit</button>
         <button
          className='remove_button'

@@ -25,26 +25,23 @@ const axiosConfig = {
   };
 
 
-const NewExpense = () => {
+const NewExpense = ({edit, setEdit}) => {
 
     const navigate = useNavigate()
 
     const { setRefresh, loggedNewUser, refresh } = useApi();
-    
-
     const [newExpense, setNewExpense] = useState(false)
     const [category, setCategory] = useState('')
     const [expense, setExpense] = useState({
         description: '',
         value: 0,
-        
     })
+    const [expenseEdit, setExpenseEdit] = useState({})
 
-
+    
 const handleSubmit = (e) => {
     e.preventDefault()
     let {description, value} = expense
-
     if(description === '') {
         alert("Description missing")
     } else if(value === 0) {
@@ -71,8 +68,52 @@ const handleSubmit = (e) => {
         setRefresh(true)
     }
 
+useEffect(() => {
+        setExpenseEdit({
+            id: edit.id,
+            description: edit.description,
+            category: edit.category,
+            value: edit.total,
+            users_fk: loggedNewUser.id
+        })
+        }, [edit])
+
+
+const handleChanges = (e) => {
+    e.preventDefault()
+    console.log(expenseEdit);
+    let {description, value} = expenseEdit
+    if(description === '') {
+        alert("Description missing")
+    } else if(value === 0) {
+        alert("Value Missing")
+    } else {
+         let URL_OPERATION_ENDPOINT = "http://localhost:8888/api/updateOperation"
+       axios({
+            method: "POST",
+            url: URL_OPERATION_ENDPOINT,
+            headers: axiosConfig,
+            data: JSON.stringify(expenseEdit)
+         }).then(res => {
+             console.log("yas");
+            setEdit({})
+            setExpenseEdit({})
+         }).catch(e => {
+             console.log("error");
+             setEdit({})
+            setExpenseEdit({})
+         })
+        }
+        setExpenseEdit({})
+        setEdit({})
+        setNewExpense(false);
+        setRefresh(true)
+}
+
     const handleExit = () => {
+        setExpense({})
         setCategory('')
+        setEdit({})
         setNewExpense(false);
         setRefresh(true)
     }
@@ -85,8 +126,7 @@ const handleSubmit = (e) => {
     <img src={Plus} alt="" />
     </button>
     {newExpense ? (
-        <div>
-            
+        <div>   
         <form 
          className='new_expense'
         action=""
@@ -103,7 +143,7 @@ const handleSubmit = (e) => {
          <div className='new_expense_category' >
             <input 
                 onClick={(e) => setCategory(e.target.value)}
-                value="house" type="checkbox" name="categoryCheckbox" id="categoryCheckbox1" />
+                value="home" type="checkbox" name="categoryCheckbox" id="categoryCheckbox1" />
                 <label
                 className={category === 'house' ? `new_category_selected` : ''}
                 for="categoryCheckbox1"
@@ -112,28 +152,28 @@ const handleSubmit = (e) => {
                 onClick={(e) => setCategory(e.target.value)}
                 value="health" type="checkbox" name="categoryCheckbox" id="categoryCheckbox2" />
                 <label
-                className={category === 'health' ? `new_category_selected` : ''}
+                className={category  === 'health' ? `new_category_selected` : ''}
                 for="categoryCheckbox2"
                 ><img src={Health} alt="" /></label>
             <input 
                 onClick={(e) => setCategory(e.target.value)}
                 value="savings" type="checkbox" name="categoryCheckbox" id="categoryCheckbox3" />
                 <label
-                className={category === 'savings' ? `new_category_selected` : ''}
+                className={category  === 'savings' ? `new_category_selected` : ''}
                 for="categoryCheckbox3"
                 ><img src={Savings} alt="" /></label>
             <input 
                 onClick={(e) => setCategory(e.target.value)}
                 value="food" type="checkbox" name="categoryCheckbox" id="categoryCheckbox4" />
                 <label
-                className={category === 'food' ? `new_category_selected` : ''}
+                className={category  === 'food' ? `new_category_selected` : ''}
                 for="categoryCheckbox4"
                 ><img src={Food} alt="" /></label>
             <input 
                 onClick={(e) => setCategory(e.target.value)}
                 value="other" type="checkbox" name="categoryCheckbox" id="categoryCheckbox5" />
                 <label
-                className={category === 'other' ? `new_category_selected` : ''}
+                className={category  === 'other' ? `new_category_selected` : ''}
                 for="categoryCheckbox5"
                 ><img src={Other} alt="" /></label>
            
@@ -149,6 +189,71 @@ const handleSubmit = (e) => {
         </form>    
             
         </div>
+    ) : null}
+    {Object.keys(edit).length !== 0 ? (
+        <form 
+        className='new_expense'
+       action=""
+       onSubmit={handleChanges}
+       >
+       <button
+       onClick={handleExit}
+       className='close_icon'><img src={Cancel} alt="" /></button>
+       <label htmlFor="">Description</label>
+       <input type="text"
+       value={expenseEdit.description}
+       onChange={(e) => setExpenseEdit({...expenseEdit, description: e.target.value})}
+       />
+        <label htmlFor="">Category</label>
+        <div className='new_expense_category' >
+           <input 
+               onClick={(e) => setExpenseEdit({...expenseEdit, category: e.target.value})}
+               value="house" type="checkbox" name="categoryCheckbox" id="categoryCheckbox1" />
+               <label
+               className={expenseEdit.category === 'house' ? `new_category_selected` : ''}
+               for="categoryCheckbox1"
+               ><img src={House} alt="" /></label>
+           <input 
+               onClick={(e) => setExpenseEdit({...expenseEdit, category: e.target.value})}
+               value="health" type="checkbox" name="categoryCheckbox" id="categoryCheckbox2" />
+               <label
+               className={expenseEdit.category === 'health' ? `new_category_selected` : ''}
+               for="categoryCheckbox2"
+               ><img src={Health} alt="" /></label>
+           <input 
+               onClick={(e) => setExpenseEdit({...expenseEdit, category: e.target.value})}
+               value="savings" type="checkbox" name="categoryCheckbox" id="categoryCheckbox3" />
+               <label
+               className={expenseEdit.category === 'savings' ? `new_category_selected` : ''}
+               for="categoryCheckbox3"
+               ><img src={Savings} alt="" /></label>
+           <input 
+               onClick={(e) => setExpenseEdit({...expenseEdit, category: e.target.value})}
+               value="food" type="checkbox" name="categoryCheckbox" id="categoryCheckbox4" />
+               <label
+               className={expenseEdit.category === 'food' ? `new_category_selected` : ''}
+               for="categoryCheckbox4"
+               ><img src={Food} alt="" /></label>
+           <input 
+               onClick={(e) => setExpenseEdit({...expenseEdit, category: e.target.value})}
+               value="other" type="checkbox" name="categoryCheckbox" id="categoryCheckbox5" />
+               <label
+               className={expenseEdit.category === 'other' ? `new_category_selected` : ''}
+               for="categoryCheckbox5"
+               ><img src={Other} alt="" /></label>
+          
+       </div>
+       <label htmlFor="">Value</label>
+       <input 
+       value={expenseEdit.value}
+       type="number" 
+       onChange={(e) => {setExpenseEdit({...expenseEdit, value: e.target.value})}}
+       />
+       <button>
+           Save changes
+       </button>
+       </form>    
+           
     ) : null}
     </>
   )

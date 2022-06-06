@@ -21,10 +21,11 @@ const axiosConfig = {
 const BalanceManager = () => {
 
 const navigate = useNavigate()
-const { loggedNewUser, refresh, setRefresh } = useApi()
+const { loggedNewUser, refresh, setRefresh, loggedUser, setLoggedNewUser } = useApi()
 const logged = sessionStorage.getItem("token")
 const [list, setList] = useState([])
-const [spinner, setSpinner] = useState(false)
+const [spinner, setSpinner] = useState(false);
+const [edit, setEdit] = useState({})
 
 
 
@@ -56,6 +57,7 @@ useEffect(() => {
             headers: axiosConfig,
             data: JSON.stringify(logged)
         })
+        console.log(awaitData);
         setList(awaitData.data)
         return awaitData
       } catch (error) {
@@ -67,7 +69,20 @@ useEffect(() => {
 setSpinner(false)
 },[refresh])
 
+useEffect(() => {
+  setTimeout(() => {
+    axios({
+      method: 'GET',
+      url: `http://localhost:8888/api/users/${loggedUser}`,
+      headers: axiosConfig,
+        }).then(res => {
+      
+      console.log(res);
+      setLoggedNewUser(res.data)
+  })
+  },500)
 
+},[refresh])
 
 
   return (
@@ -77,16 +92,20 @@ setSpinner(false)
     ) : (
       <div className='balance'>
       <BalanceMeter
+      setRefresh={setRefresh}
       spinner={spinner}
       setSpinner={setSpinner}
       list={list}
       refresh={refresh}
       />
       <NewExpense
+      edit={edit}
+      setEdit={setEdit}
       spinner={spinner}
       setRefresh={setRefresh}
       />
       <OperationsList
+      setEdit={setEdit}
       spinner={spinner}
       list={list}
       refresh={refresh}
