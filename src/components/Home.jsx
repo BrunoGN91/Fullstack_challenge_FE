@@ -4,8 +4,6 @@ import useApi from '../hooks/useApi'
 
 const Home = () => {
 
-  const { loggedUser } = useApi()
-  console.log();
   
   return (
     <>

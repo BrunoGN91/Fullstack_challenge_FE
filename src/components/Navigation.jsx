@@ -30,7 +30,7 @@ const Navigation = () => {
           ) : <Link to="/register">Register</Link>}
       </div>
     <Routes>
-        <Route exact path='/' component={Navigation} element={<Home />} /> 
+        <Route exact path='/' component={Navigation} element={loggedNewUser !== null ? <Home /> : null} /> 
         <Route path='/register' element={<Register/>} />
         <Route path='/login' element={<Login/>} />
         <Route path='/balance' element={loggedNewUser.balance !== undefined ? <BalanceManager/> : <NotFound />} />

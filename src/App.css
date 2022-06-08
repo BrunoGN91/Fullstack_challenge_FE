@@ -173,7 +173,59 @@ button {
 .expense_button:active {
     background-color: blueviolet;
 }
+.new_operation {
+    position: fixed;
+    top: 50%;
+    right: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: azure;
+    width: 70%;
+    height: 80%;
+    transform: translate(50%, -50%);
+    z-index: 2;
+}
 
+.new_operation label {
+    color:black;
+    font-size: 1.3rem;
+    margin: 25px 0px;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 10px 10px
+}
+
+.operation_option_expense:hover {
+    background-color: rgb(255, 203, 107);
+}
+
+.operation_option_balance:hover {
+    background-color: rgb(129, 255, 129)
+}
+
+.new_operation input {
+    padding: 10px;
+    margin: 25px 0px;
+    border-radius: 10px;
+    border: none;
+    border: #3b82f6 1px solid;
+    display: none;
+}
+.operation_option_expense {
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+}
+.operation_option_balance {
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
 .new_expense {
     position: fixed;
     top: 50%;
@@ -186,6 +238,7 @@ button {
     width: 70%;
     height: 80%;
     transform: translate(50%, -50%);
+    z-index: 2;
 }
 
 .new_expense label {
@@ -226,6 +279,10 @@ button {
     width: 40px;
 }
 
+.new_expense_category img:hover {
+    cursor: pointer;
+}
+
 .new_category_selected {
     background-color: rgb(255, 203, 107);
 }
@@ -250,6 +307,7 @@ button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    z-index: 10;
 }
 
 .new_balance form {
@@ -294,10 +352,12 @@ button {
     justify-content: space-evenly;
 }
 
-.balance_meter h4 {
+.balance_meter h3 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-size: 1rem;
+    margin: auto
 }
 
 .balance_meter h4 span {
@@ -325,6 +385,16 @@ button {
     align-items: center;
 }
 
+.balance_info h4{
+    font-size: 1rem;
+}
+
+.balance_info span {
+    margin-bottom: 20px;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
 .balance_info button {
     text-transform: uppercase;
     padding: 10px 20px;
@@ -346,7 +416,7 @@ button {
     width: 70%;
     height: 50%;
     transform: translate(50%, -50%);
-    z-index: 1;
+    z-index:2;
     
 }
 
@@ -436,6 +506,14 @@ button {
   }
 /* List of operations */
 
+.added_balance {
+    color:rgb(129, 255, 129)
+}
+
+.added_expense {
+    color:rgb(255, 203, 107)
+}
+
 .operations_list {
     margin-top: 20px;
     width: 100%;
@@ -458,7 +536,8 @@ button {
     display: grid;
     grid-template-columns: repeat(4, 1fr) 150px 150px;
     justify-items: center;
-    align-items: center;    
+    align-items: center;
+    
     
 }
 
@@ -467,12 +546,16 @@ button {
     background-color: #fff;
     border-radius: 50%;
     padding: 5px;
+    z-index: 0;
 }
 
 
 .tooltip {
     position: relative;
     display: inline-block;
+    z-index: 1;
+    display: flex;
+    align-items: center;
     
   }
   
@@ -489,23 +572,26 @@ button {
     text-align: center;
     padding: 5px 0;
     border-radius: 6px;
-   
-    
     position: absolute;
-    z-index: 1;
+    
+    
   }
   
   .tooltip:hover {
       cursor: pointer;
+      z-index: 1;
   }
   .tooltip:hover .tooltipText {
     visibility: visible;
+    z-index: 1;
     
   }
 .expense_item p {
     text-align: left;
 }
-
+.tooltip img {
+    z-index: 1;
+}
 .remove_button {
     width: 100px;
     padding: 10px 20px;

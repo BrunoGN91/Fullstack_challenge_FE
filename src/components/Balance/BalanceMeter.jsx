@@ -15,115 +15,101 @@ const axiosConfig = {
 };
 
 
-const BalanceMeter = ({ refresh, list, spinner, setSpinner, setRefresh }) => {
+const BalanceMeter = ({ refresh, list, spinner,setRefresh }) => {
 
     const { loggedNewUser } = useApi()
-
+    
     const [totalExpenses, setTotalExpenses] = useState(0)
     const [percentage, setPercentage] = useState(0)
     const [available, setAvailable] = useState(0);
-    const [addBalance, setAddBalance] = useState({
-      description: '',
-      value: 0
-    })
-    const [newBalance, setNewBalance] = useState(false)
-    
+    const [totalBalance, setTotalBalance] = useState(0)
+    const [editInitialBalance, setEditInitialBalance] = useState(false)
+    const [updatedInitialBalance, setUpdatedInitialBalance] = useState(loggedNewUser.balance)
 
-    
-const handleTotal = () => {
-  let total = 0
-  let data = list.map(expense => {
-    if(expense.category === "add_balance") {
-      setTotalExpenses(total -= expense.total)
-    } else {
-      setTotalExpenses(total += expense.total)
-    }
-     
-  })
-  return data
-}
+
     useEffect(() => {
+      
      try {
-       const handleSum = async () => {
-        handleTotal()
-        setAvailable(loggedNewUser.balance - totalExpenses)
-        const newPercentage = ((loggedNewUser.balance - totalExpenses) / loggedNewUser.balance * 100).toFixed(0)
-        setPercentage(newPercentage)
-       }
-       handleSum()
+        console.log(list);
+        setTotalExpenses(0)
+        setTotalBalance(loggedNewUser.balance)
+        // setAvailable(totalBalance - totalExpenses)
+        // setPercentage(((available / totalBalance) * 100).toFixed(0))
+
+         if(list.length !== 0) {
+          list.map(operation => {
+            let initialBalance = loggedNewUser.balance
+            let total = 0
+            switch (operation.category){
+  
+              case 'add_balance':
+                setTotalBalance(initialBalance += operation.total);
+                console.log(totalBalance);
+                break;
+              default:
+                setTotalExpenses(total += operation.total)
+                console.log(totalExpenses);
+                break;
+            }
+          })
+         }
+       setAvailable(totalBalance - totalExpenses)
      } catch (error) {
-       
+       console.log("Error on balance loadUp");
      }
         
     },[list])
 
-    const handleAddBalance = () => {
-      if(newBalance.description === '') {
-        alert("Missing Description")
-      } else if (newBalance.total === 0) {
-        alert("Missing Total") 
-      } else {
-        axios({
-          method: "POST",
-          url: "http://localhost:8888/api/setNewValue",
-          headers: axiosConfig,
-          data: JSON.stringify({
-            ...addBalance,
-            category: "add_balance",
-            users_fk: loggedNewUser.id
-          })
-        }).then(res => {
-          setAddBalance({
-            description: '',
-            value: 0
-          })
-          setRefresh(true)
-          setNewBalance(false)
-        }).catch(e => {
-          console.log("error");
-        })
-      }
-      setAddBalance({
-        description: '',
-        value: 0
+useEffect(() => {
+      setPercentage(((available / totalBalance) * 100).toFixed(0))
+  }, [available, editInitialBalance])
+
+
+  const handleEditInitialBalance = (e) => {
+    e.preventDefault()
+    axios({
+      method: "PUT",
+      url: 'http://localhost:8888/api/editInitialBalance',
+      headers: axiosConfig,
+      data: JSON.stringify({
+        newBalance: updatedInitialBalance,
+        user: loggedNewUser.id
       })
+    }).then(res => {
       setRefresh(true)
-      setNewBalance(false)
-    }
-
-    const handleExit = () => {
-      setNewBalance(false)
-    }
-
+      setEditInitialBalance(false)
+      setUpdatedInitialBalance(updatedInitialBalance)
+    })
+    setUpdatedInitialBalance(updatedInitialBalance)
+    setRefresh(true)
+    setEditInitialBalance(false)
+  }
+  const handleExit = () => {
+    setEditInitialBalance(false)
+}
   return (
    <>
    <div className='balance_meter'>
      <div className='balance_info'>
-     <h4>Your Initial Balance: <span>$ {(loggedNewUser.balance.toFixed(2))}</span></h4>
-      <button
-      onClick={() => setNewBalance(true)}
-      >Add to your balance</button>
-      {newBalance ? (
+     <h3>Initial Balance <span>$ {(loggedNewUser.balance.toFixed(2))}</span></h3>
+     <button onClick={() => setEditInitialBalance(true)}>Edit initial Balance</button>
+      </div>
+      {editInitialBalance ? (
         <>
-        
-          <form 
-          className='add_balance'
-          action=""
-          onSubmit={handleAddBalance}
-          >
-            <button
-        onClick={handleExit}
-        className='close_icon'><img src={Cancel} alt="" /></button>
-            <label htmlFor="">Description</label>
-            <input type="text" onChange={(e) => {setAddBalance({...addBalance, description: e.target.value})}}/>
-              <label htmlFor="">Balance</label>
-              <input type="number" onChange={(e) => {setAddBalance({...addBalance, value: e.target.value})}}/>
-              <button>Submit</button>
-          </form>
-
+        <form 
+         className='add_balance'
+         action=""
+         onSubmit={handleEditInitialBalance}
+         >
+           <button
+       onClick={handleExit}
+       className='close_icon'><img src={Cancel} alt="" /></button>
+             <label htmlFor="">Initial Balance</label>
+             <input type="number" value={updatedInitialBalance} onChange={(e) => setUpdatedInitialBalance(Number(e.target.value))} />
+             <button>Submit</button>
+         </form>
         </>
       ) : null}
-      </div>
      <div className='meter_box'>
             <CircularProgressbar
             className='meter'
@@ -142,7 +128,12 @@ const handleTotal = () => {
               </CircularProgressbar>
               {!spinner ? <Spinner /> : null}
               </div>
-            <h4> Surplus: <span className={percentage > 0 ? '' : `negative`}>$ {(available.toFixed(2))}</span></h4>
+              <div className='balance_info'>
+            <h4> Total Balance</h4>
+            <span className={totalBalance > 0 ? '' : `negative`}>$ {(totalBalance.toFixed(2))}</span>
+            <h4> Surplus</h4>
+            <span className={percentage > 0 ? '' : `negative`}>$ {(available.toFixed(2))}</span>
+            </div>
         </div>
    </>
   )

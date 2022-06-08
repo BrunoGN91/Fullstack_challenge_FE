@@ -9,6 +9,7 @@ import Food from "../../../public/images/dish.png"
 import Health from "../../../public/images/heartbeat.png"
 import Savings from "../../../public/images/piggy-bank.png"
 import Other from "../../../public/images/more.png"
+import Balance from "/images/balance.png"
 
 
 const axiosConfig = {
@@ -21,7 +22,7 @@ const axiosConfig = {
   };
   
 
-const OperationsList = ({ list, spinner, setEdit }) => {
+const OperationsList = ({ list, spinner, setEditExpense, setEditBalance }) => {
 
     const { setRefresh, loggedUser } = useApi()
  
@@ -58,22 +59,23 @@ const OperationsList = ({ list, spinner, setEdit }) => {
       list.map(item => (
         <>
         <div className='expense_item'>
-        <p>{item.description}</p>
-        <h2>$ {(item.total).toFixed(2)}</h2>
+        <p className={item.category === "add_balance" ? "added_balance" : 'added_expense'}>{item.description}</p>
+        <h2 className={item.category === "add_balance" ? "added_balance" : 'added_expense'}>$ {(item.total).toFixed(2)}</h2>
         <div className='tooltip'>
           <span className='tooltipText'>{item.category}</span>
         <img 
-        src={item.category === "house" ? House :
+        src={item.category === "home" ? House :
                   item.category === "savings" ? Savings :
                   item.category === "other" ? Other :
                   item.category === "food" ? Food :
-                  item.category === "health" ? Health : null
+                  item.category === "health" ? Health : 
+                  item.category === "add_balance" ? Balance : null
       } alt="" />
       </div>
-        <h4>{(new Date(item.lastUpdated)).toLocaleDateString('en-US')}</h4>
+        <h4 className={item.category === "add_balance" ? "added_balance" : 'added_expense'}>{(new Date(item.lastUpdated)).toLocaleDateString('en-US')}</h4>
         <button
         className='edit_button'
-        onClick={() => setEdit(item)}
+        onClick={() => {item.category !== 'add_balance' ? setEditExpense(item) : setEditBalance(item)}}
         >Edit</button>
         <button
          className='remove_button'

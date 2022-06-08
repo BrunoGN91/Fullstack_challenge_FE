@@ -25,7 +25,7 @@ const axiosConfig = {
   };
 
 
-const NewExpense = ({edit, setEdit}) => {
+const NewExpense = ({editExpense, setEditExpense, editBalance, setEditBalance}) => {
 
     const navigate = useNavigate()
 
@@ -36,7 +36,15 @@ const NewExpense = ({edit, setEdit}) => {
         description: '',
         value: 0,
     })
-    const [expenseEdit, setExpenseEdit] = useState({})
+    const [expenseUpdate, setExpenseUpdate] = useState({})
+    const [newOperation, setNewOperation] = useState(false)
+    const [addBalance, setAddBalance] = useState({
+        description: '',
+        value: 0
+      })
+      const [newBalance, setNewBalance] = useState(false)
+      const [editOldBalance, setEditOldBalance] = useState({})
+      
 
     
 const handleSubmit = (e) => {
@@ -59,6 +67,8 @@ const handleSubmit = (e) => {
                 value: 0,
             })
             setCategory('')
+            setNewOperation(false)
+
          }).catch(e => {
              console.log("error");
          })
@@ -66,23 +76,25 @@ const handleSubmit = (e) => {
         setCategory('')
         setNewExpense(false);
         setRefresh(true)
+        setNewOperation(false)
+
     }
 
 useEffect(() => {
-        setExpenseEdit({
-            id: edit.id,
-            description: edit.description,
-            category: edit.category,
-            value: edit.total,
+    setExpenseUpdate({
+            id: editExpense.id,
+            description: editExpense.description,
+            category: editExpense.category,
+            value: editExpense.total,
             users_fk: loggedNewUser.id
         })
-        }, [edit])
+        }, [editExpense])
 
 
 const handleChanges = (e) => {
     e.preventDefault()
-    console.log(expenseEdit);
-    let {description, value} = expenseEdit
+    console.log(expenseUpdate);
+    let {description, value} = expenseUpdate
     if(description === '') {
         alert("Description missing")
     } else if(value === 0) {
@@ -93,38 +105,174 @@ const handleChanges = (e) => {
             method: "POST",
             url: URL_OPERATION_ENDPOINT,
             headers: axiosConfig,
-            data: JSON.stringify(expenseEdit)
+            data: JSON.stringify(expenseUpdate)
          }).then(res => {
-             console.log("yas");
-            setEdit({})
-            setExpenseEdit({})
+             setEditExpense({})
+             setExpenseUpdate({})
+             setNewOperation(false)
+
          }).catch(e => {
              console.log("error");
-             setEdit({})
-            setExpenseEdit({})
+             setEditExpense({})
+             setExpenseUpdate({})
          })
         }
-        setExpenseEdit({})
-        setEdit({})
+        setEditExpense({})
+        setExpenseUpdate({})
         setNewExpense(false);
         setRefresh(true)
+        setNewOperation(false)
+
 }
 
     const handleExit = () => {
         setExpense({})
         setCategory('')
-        setEdit({})
+        setEditExpense({})
         setNewExpense(false);
-        setRefresh(true)
+        setNewOperation(false)
+        setNewBalance(false)
     }
+
+// Adding new balance or editing added balance
+
+const handleAddBalance = () => {
+    if(newBalance.description === '') {
+      alert("Missing Description")
+    } else if (newBalance.total === 0) {
+      alert("Missing Total") 
+    } else {
+      axios({
+        method: "POST",
+        url: "http://localhost:8888/api/setNewValue",
+        headers: axiosConfig,
+        data: JSON.stringify({
+          ...addBalance,
+          category: "add_balance",
+          users_fk: loggedNewUser.id
+        })
+      }).then(res => {
+        setAddBalance({
+          description: '',
+          value: 0
+        })
+        setRefresh(true)
+        setNewBalance(false)
+        setNewOperation(false)
+      }).catch(e => {
+        console.log("error");
+      })
+    }
+    setAddBalance({
+      description: '',
+      value: 0
+    })
+    setRefresh(true)
+    setNewBalance(false)
+    setNewOperation(false)
+  }
+
+
+useEffect(() => {
+setEditOldBalance({
+            id: editBalance.id,
+            description: editBalance.description,
+            category: editBalance.category,
+            value: editBalance.total,
+            users_fk: loggedNewUser.id
+        })
+        }, [editBalance])
+
+const handleBalanceChanges = (e) => {
+e.preventDefault()
+if(editOldBalance.description === '') {
+  alert("Missing Description")
+} else if (editOldBalance.total === 0) {
+  alert("Missing Total") 
+} else { 
+  axios({
+    method: "POST",
+    url: "http://localhost:8888/api/updateOperation",
+    headers: axiosConfig,
+    data: JSON.stringify(editOldBalance)
+  }).then(res => {
+    setEditOldBalance({})
+    setEditBalance({})
+    setRefresh(true)
+    setNewOperation(false)
+  }).catch(e => {
+    console.log("error post balance");
+  }) 
+  setRefresh(true)
+  setEditOldBalance({})
+  setEditBalance({})
+  setNewOperation(false)
+}
+}
+
+
 
   return (
     <>
     <button
     className='expense_button'
-    onClick={() => setNewExpense(true)}>
+    onClick={() => setNewOperation(true)}>
     <img src={Plus} alt="" />
     </button>
+    {newOperation ? (
+        <>
+        <div className='new_operation'>
+        <button
+        onClick={handleExit}
+        className='close_icon'><img src={Cancel} alt="" /></button>
+            <div className='operation_option_expense'>
+            <input type="checkbox" id="operationCheckBox1" onChange={() => setNewExpense(true)}/>
+                <label htmlFor="" for="operationCheckBox1">Expense</label>
+                </div>
+            <div className='operation_option_balance'>
+            <input type="checkbox" id="operationCheckBox2" onChange={() => setNewBalance(true)}/>
+                <label htmlFor="" for="operationCheckBox2" >Balance</label>
+                </div>
+        </div>
+        </>
+    ) : null}
+    {newBalance ? (
+        <>
+        
+          <form 
+          className='add_balance'
+          action=""
+          onSubmit={handleAddBalance}
+          >
+            <label htmlFor="">Description</label>
+            <input type="text" onChange={(e) => {setAddBalance({...addBalance, description: e.target.value})}}/>
+              <label htmlFor="">Balance</label>
+              <input type="number" onChange={(e) => {setAddBalance({...addBalance, value: e.target.value})}}/>
+              <button>Submit</button>
+          </form>
+
+        </>
+      ) : null}
+      {Object.keys(editBalance).length !== 0 ? (
+         <>
+        
+         <form 
+         className='add_balance'
+         action=""
+         onSubmit={handleBalanceChanges}
+         >
+           <button
+       onClick={handleExit}
+       className='close_icon'><img src={Cancel} alt="" /></button>
+           <label htmlFor="">Description</label>
+           <input value={editOldBalance.description} type="text" onChange={(e) => {setEditOldBalance({...editOldBalance, description: e.target.value})}}/>
+             <label htmlFor="">Balance</label>
+             <input type="number" value={editOldBalance.value} onChange={(e) => {setEditOldBalance({...editOldBalance, value: e.target.value})}}/>
+             <button>Submit</button>
+         </form>
+
+       </>
+      ) : null}
     {newExpense ? (
         <div>   
         <form 
@@ -140,14 +288,19 @@ const handleChanges = (e) => {
         onChange={(e) => {setExpense({...expense, description: e.target.value})}}
         />
          <label htmlFor="">Category</label>
-         <div className='new_expense_category' >
+         <div className='new_expense_category'>
+            <div className='tooltip'>
+            <span className='tooltipText'>Home</span>
             <input 
                 onClick={(e) => setCategory(e.target.value)}
                 value="home" type="checkbox" name="categoryCheckbox" id="categoryCheckbox1" />
                 <label
-                className={category === 'house' ? `new_category_selected` : ''}
+                className={category === 'home' ? `new_category_selected` : ''}
                 for="categoryCheckbox1"
                 ><img src={House} alt="" /></label>
+                </div>
+            <div className='tooltip'>
+            <span className='tooltipText'>Health</span>
             <input 
                 onClick={(e) => setCategory(e.target.value)}
                 value="health" type="checkbox" name="categoryCheckbox" id="categoryCheckbox2" />
@@ -155,6 +308,9 @@ const handleChanges = (e) => {
                 className={category  === 'health' ? `new_category_selected` : ''}
                 for="categoryCheckbox2"
                 ><img src={Health} alt="" /></label>
+                </div>
+            <div className='tooltip'>
+            <span className='tooltipText'>Savings</span>
             <input 
                 onClick={(e) => setCategory(e.target.value)}
                 value="savings" type="checkbox" name="categoryCheckbox" id="categoryCheckbox3" />
@@ -162,6 +318,9 @@ const handleChanges = (e) => {
                 className={category  === 'savings' ? `new_category_selected` : ''}
                 for="categoryCheckbox3"
                 ><img src={Savings} alt="" /></label>
+            </div>
+            <div className='tooltip'>
+            <span className='tooltipText'>Food</span>
             <input 
                 onClick={(e) => setCategory(e.target.value)}
                 value="food" type="checkbox" name="categoryCheckbox" id="categoryCheckbox4" />
@@ -169,6 +328,9 @@ const handleChanges = (e) => {
                 className={category  === 'food' ? `new_category_selected` : ''}
                 for="categoryCheckbox4"
                 ><img src={Food} alt="" /></label>
+            </div>
+            <div className='tooltip'>
+            <span className='tooltipText'>Other</span>
             <input 
                 onClick={(e) => setCategory(e.target.value)}
                 value="other" type="checkbox" name="categoryCheckbox" id="categoryCheckbox5" />
@@ -176,6 +338,7 @@ const handleChanges = (e) => {
                 className={category  === 'other' ? `new_category_selected` : ''}
                 for="categoryCheckbox5"
                 ><img src={Other} alt="" /></label>
+            </div>
            
         </div>
         <label htmlFor="">Value</label>
@@ -190,7 +353,7 @@ const handleChanges = (e) => {
             
         </div>
     ) : null}
-    {Object.keys(edit).length !== 0 ? (
+    {Object.keys(editExpense).length !== 0 ? (
         <form 
         className='new_expense'
        action=""
@@ -201,53 +364,53 @@ const handleChanges = (e) => {
        className='close_icon'><img src={Cancel} alt="" /></button>
        <label htmlFor="">Description</label>
        <input type="text"
-       value={expenseEdit.description}
-       onChange={(e) => setExpenseEdit({...expenseEdit, description: e.target.value})}
+       value={expenseUpdate.description}
+       onChange={(e) => setExpenseUpdate({...expenseUpdate, description: e.target.value})}
        />
         <label htmlFor="">Category</label>
         <div className='new_expense_category' >
            <input 
-               onClick={(e) => setExpenseEdit({...expenseEdit, category: e.target.value})}
+               onClick={(e) => setExpenseUpdate({...expenseUpdate, category: e.target.value})}
                value="house" type="checkbox" name="categoryCheckbox" id="categoryCheckbox1" />
                <label
-               className={expenseEdit.category === 'house' ? `new_category_selected` : ''}
+               className={expenseUpdate.category === 'house' ? `new_category_selected` : ''}
                for="categoryCheckbox1"
                ><img src={House} alt="" /></label>
            <input 
-               onClick={(e) => setExpenseEdit({...expenseEdit, category: e.target.value})}
+               onClick={(e) => setExpenseUpdate({...expenseUpdate, category: e.target.value})}
                value="health" type="checkbox" name="categoryCheckbox" id="categoryCheckbox2" />
                <label
-               className={expenseEdit.category === 'health' ? `new_category_selected` : ''}
+               className={expenseUpdate.category === 'health' ? `new_category_selected` : ''}
                for="categoryCheckbox2"
                ><img src={Health} alt="" /></label>
            <input 
-               onClick={(e) => setExpenseEdit({...expenseEdit, category: e.target.value})}
+               onClick={(e) => setExpenseUpdate({...expenseUpdate, category: e.target.value})}
                value="savings" type="checkbox" name="categoryCheckbox" id="categoryCheckbox3" />
                <label
-               className={expenseEdit.category === 'savings' ? `new_category_selected` : ''}
+               className={expenseUpdate.category === 'savings' ? `new_category_selected` : ''}
                for="categoryCheckbox3"
                ><img src={Savings} alt="" /></label>
            <input 
-               onClick={(e) => setExpenseEdit({...expenseEdit, category: e.target.value})}
+               onClick={(e) => setExpenseUpdate({...expenseUpdate, category: e.target.value})}
                value="food" type="checkbox" name="categoryCheckbox" id="categoryCheckbox4" />
                <label
-               className={expenseEdit.category === 'food' ? `new_category_selected` : ''}
+               className={expenseUpdate.category === 'food' ? `new_category_selected` : ''}
                for="categoryCheckbox4"
                ><img src={Food} alt="" /></label>
            <input 
-               onClick={(e) => setExpenseEdit({...expenseEdit, category: e.target.value})}
+               onClick={(e) => setExpenseUpdate({...expenseUpdate, category: e.target.value})}
                value="other" type="checkbox" name="categoryCheckbox" id="categoryCheckbox5" />
                <label
-               className={expenseEdit.category === 'other' ? `new_category_selected` : ''}
+               className={expenseUpdate.category === 'other' ? `new_category_selected` : ''}
                for="categoryCheckbox5"
                ><img src={Other} alt="" /></label>
           
        </div>
        <label htmlFor="">Value</label>
        <input 
-       value={expenseEdit.value}
+       value={expenseUpdate.value}
        type="number" 
-       onChange={(e) => {setExpenseEdit({...expenseEdit, value: e.target.value})}}
+       onChange={(e) => {setExpenseUpdate({...expenseUpdate, value: e.target.value})}}
        />
        <button>
            Save changes

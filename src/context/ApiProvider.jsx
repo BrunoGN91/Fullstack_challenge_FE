@@ -21,17 +21,7 @@ const ApiProvider = ({children}) => {
   const [loggedNewUser, setLoggedNewUser] = useState({})
   const [refresh, setRefresh] = useState(false)
 
-  useEffect(() => {
-    axios({
-      method: 'GET',
-      url: `http://localhost:8888/api/users/${loggedUser}`,
-      headers: axiosConfig,
-        }).then(res => {
-      
-      console.log(res);
-      setLoggedNewUser(res.data)
-  })
-  },[refresh])
+ 
   
   return (
       <ApiContext.Provider
