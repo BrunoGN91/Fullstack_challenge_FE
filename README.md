@@ -28,9 +28,19 @@ so that you use your own local ports.
 
 ## Installation
 
+You will need to pull the server side of the app built in NodeJs - https://github.com/BrunoGN91/Fullstack_challenge_BE
+
+Once its set up you can run this app after the following commands:
+
 ```bash
 npm install
 ```
+
+```bash
+npm run dev
+```
+
+Enjoy!
 
 
 
