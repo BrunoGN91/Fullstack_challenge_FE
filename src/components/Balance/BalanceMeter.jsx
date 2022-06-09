@@ -37,19 +37,17 @@ const BalanceMeter = ({ refresh, list, spinner,setRefresh }) => {
         // setPercentage(((available / totalBalance) * 100).toFixed(0))
 
          if(list.length !== 0) {
+          let initialBalance = loggedNewUser.balance
+          let total = 0
           list.map(operation => {
-            let initialBalance = loggedNewUser.balance
-            let total = 0
             switch (operation.category){
-  
+              
               case 'add_balance':
-                setTotalBalance(initialBalance += operation.total);
-                console.log(totalBalance);
-                break;
+                return setTotalBalance(initialBalance += operation.total)
+
               default:
-                setTotalExpenses(total += operation.total)
-                console.log(totalExpenses);
-                break;
+                return setTotalExpenses(total += operation.total)
+                
             }
           })
          }

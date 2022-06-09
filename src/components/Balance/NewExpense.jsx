@@ -44,40 +44,56 @@ const NewExpense = ({editExpense, setEditExpense, editBalance, setEditBalance}) 
       })
       const [newBalance, setNewBalance] = useState(false)
       const [editOldBalance, setEditOldBalance] = useState({})
-      
+      const [errorDescription, setErrorDescription] = useState(false)
+      const [errorValue, setErrorValue] = useState(false)
+
 
     
 const handleSubmit = (e) => {
-    e.preventDefault()
-    let {description, value} = expense
-    if(description === '') {
-        alert("Description missing")
-    } else if(value === 0) {
-        alert("Value Missing")
-    } else {
-         let URL_OPERATION_ENDPOINT = "http://localhost:8888/api/setNewValue"
+
+  e.preventDefault()
+
+  
+    let URL_OPERATION_ENDPOINT = "http://localhost:8888/api/setNewValue"
+    const {description, value} = expense
+    // Validations
+    
+    switch(description) {
+      case '' :
+        return setErrorDescription(true);
+      default:
+        setErrorDescription(false)
+    }
+    switch(value) {
+      case 0:
+        return setErrorValue(true);
+      default:
+        setErrorValue(false)
+    }
+
+
+    // REQUEST 
        axios({
             method: "POST",
             url: URL_OPERATION_ENDPOINT,
             headers: axiosConfig,
             data: JSON.stringify({...expense, category: category, users_fk: loggedNewUser.id})
          }).then(res => {
-            setExpense({
-                description: '',
-                value: 0,
-            })
-            setCategory('')
-            setNewOperation(false)
-
+            
          }).catch(e => {
-             console.log("error");
+             console.log("Error on Post Request 'New Expense' ");
          })
-        }
-        setCategory('')
-        setNewExpense(false);
-        setRefresh(true)
-        setNewOperation(false)
-
+      
+      setExpense({
+          description: '',
+          value: 0,
+      })
+      setCategory('');
+      setNewExpense(false);
+      setNewOperation(false);
+      setRefresh(true)   
+      setErrorDescription(false)
+      setErrorValue(false)
     }
 
 useEffect(() => {
@@ -132,6 +148,8 @@ const handleChanges = (e) => {
         setNewExpense(false);
         setNewOperation(false)
         setNewBalance(false)
+        setErrorDescription(false)
+        setErrorValue(false)
     }
 
 // Adding new balance or editing added balance
@@ -284,7 +302,8 @@ if(editOldBalance.description === '') {
         onClick={handleExit}
         className='close_icon'><img src={Cancel} alt="" /></button>
         <label htmlFor="">Description</label>
-        <input type="text" 
+        <span className={errorDescription ? 'expense_error' : 'no_error'}>Missing description</span>
+        <input type="text" style={errorDescription ? {border: "2px #f06851 solid"} : null}
         onChange={(e) => {setExpense({...expense, description: e.target.value})}}
         />
          <label htmlFor="">Category</label>
@@ -342,11 +361,13 @@ if(editOldBalance.description === '') {
            
         </div>
         <label htmlFor="">Value</label>
-        <input 
+        <span className={errorValue ? 'expense_error' : 'no_error'}>Missing Value</span>
+        <input
+        style={errorValue ? {border: "2px #f06851 solid"} : null}
         type="number" 
         onChange={(e) => {setExpense({...expense, value: e.target.value})}}
         />
-        <button>
+        <button type="submit">
             Submit
         </button>
         </form>    

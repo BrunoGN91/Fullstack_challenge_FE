@@ -28,12 +28,12 @@ const OperationsList = ({ list, spinner, setEditExpense, setEditBalance }) => {
  
     const handleRemoveExpense = (id) => {
         axios({
-            method: "PUT",
+            method: "DELETE",
             url: `http://localhost:8888/api/operationsList/${id}`,
             headers: axiosConfig,
             data: JSON.stringify(loggedUser)
         }).then(res => {
-          console.log(res);
+          console.log("res");
         }).catch(e => {
           console.log("error");
         })
@@ -58,7 +58,10 @@ const OperationsList = ({ list, spinner, setEditExpense, setEditBalance }) => {
     {spinner ? (
       list.map(item => (
         <>
-        <div className='expense_item'>
+        <div 
+        className='expense_item'
+        key={item.id}
+        >
         <p className={item.category === "add_balance" ? "added_balance" : 'added_expense'}>{item.description}</p>
         <h2 className={item.category === "add_balance" ? "added_balance" : 'added_expense'}>$ {(item.total).toFixed(2)}</h2>
         <div className='tooltip'>

@@ -299,6 +299,18 @@ button {
     background: none;
     width: 20px
 }
+.expense_error {
+    color: #f06851;
+    text-transform: uppercase;
+}
+
+.expense_error_border {
+    border: 2px #f06851 solid;
+}
+
+.no_error {
+    display: none;
+}
 
 /* New Balance */
 
