@@ -44,57 +44,55 @@ const NewExpense = ({editExpense, setEditExpense, editBalance, setEditBalance}) 
       })
       const [newBalance, setNewBalance] = useState(false)
       const [editOldBalance, setEditOldBalance] = useState({})
-      const [errorDescription, setErrorDescription] = useState(false)
-      const [errorValue, setErrorValue] = useState(false)
+      const [formErrors, setFormErrors] = useState({})
+      const [submitForm, setSubmitForm] = useState(false)
 
+const validateForm = (values) => {
+ const errors = {}
+  if(values.description === '') {
+    errors.description = "Error in Description"
+  }
 
+  if(values.value === 0) {
+    errors.value = "Error in value"
+  }
+
+  return errors
+}
     
 const handleSubmit = (e) => {
-
   e.preventDefault()
+   setFormErrors(validateForm(expense))
+   setSubmitForm(true)
 
-  
-    let URL_OPERATION_ENDPOINT = "http://localhost:8888/api/setNewValue"
-    const {description, value} = expense
-    // Validations
+    }
     
-    switch(description) {
-      case '' :
-        return setErrorDescription(true);
-      default:
-        setErrorDescription(false)
-    }
-    switch(value) {
-      case 0:
-        return setErrorValue(true);
-      default:
-        setErrorValue(false)
-    }
-
-
-    // REQUEST 
-       axios({
-            method: "POST",
-            url: URL_OPERATION_ENDPOINT,
-            headers: axiosConfig,
-            data: JSON.stringify({...expense, category: category, users_fk: loggedNewUser.id})
-         }).then(res => {
-            
-         }).catch(e => {
-             console.log("Error on Post Request 'New Expense' ");
-         })
-      
-      setExpense({
+useEffect(() => {
+    if(Object.keys(formErrors).length === 0 && submitForm) {
+      console.log("submit");
+      console.log(formErrors);
+      console.log(submitForm);
+      axios({
+           method: "POST",
+           url: "http://localhost:8888/api/setNewValue",
+           headers: axiosConfig,
+           data: JSON.stringify({...expense, category: category, users_fk: loggedNewUser.id})
+        }).then(res => {
+        
+        }).catch(e => {
+            console.log("Error on Post Request 'New Expense' ");
+        })
+        setExpense({
           description: '',
           value: 0,
       })
       setCategory('');
       setNewExpense(false);
       setNewOperation(false);
-      setRefresh(true)   
-      setErrorDescription(false)
-      setErrorValue(false)
-    }
+      setRefresh(true)
+      setSubmitForm(false)
+   } 
+    }, [formErrors])
 
 useEffect(() => {
     setExpenseUpdate({
@@ -142,16 +140,19 @@ const handleChanges = (e) => {
 }
 
     const handleExit = () => {
+        
         setExpense({})
         setCategory('')
         setEditExpense({})
         setNewExpense(false);
         setNewOperation(false)
         setNewBalance(false)
-        setErrorDescription(false)
-        setErrorValue(false)
+        setSubmitForm(false)
+        setFormErrors({})
+        console.log(formErrors);
+      console.log(submitForm);
     }
-
+    
 // Adding new balance or editing added balance
 
 const handleAddBalance = () => {
@@ -296,14 +297,15 @@ if(editOldBalance.description === '') {
         <form 
          className='new_expense'
         action=""
-        onSubmit={handleSubmit}
+        onSubmit={e => handleSubmit(e)}
         >
         <button
         onClick={handleExit}
         className='close_icon'><img src={Cancel} alt="" /></button>
         <label htmlFor="">Description</label>
-        <span className={errorDescription ? 'expense_error' : 'no_error'}>Missing description</span>
-        <input type="text" style={errorDescription ? {border: "2px #f06851 solid"} : null}
+        <span className='expense_error'>{formErrors.description}</span>
+        <input type="text"
+        
         onChange={(e) => {setExpense({...expense, description: e.target.value})}}
         />
          <label htmlFor="">Category</label>
@@ -361,9 +363,9 @@ if(editOldBalance.description === '') {
            
         </div>
         <label htmlFor="">Value</label>
-        <span className={errorValue ? 'expense_error' : 'no_error'}>Missing Value</span>
+        <span className='expense_error'>{formErrors.value}</span>
         <input
-        style={errorValue ? {border: "2px #f06851 solid"} : null}
+        
         type="number" 
         onChange={(e) => {setExpense({...expense, value: e.target.value})}}
         />
