@@ -2,6 +2,10 @@ import React, {useState,useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import useApi from '../hooks/useApi';
+import Eye from "../../public/images/eye.png"
+import Hidden from "../../public/images/hidden.png"
+
+
 
 
 const axiosConfig = {
@@ -21,16 +25,34 @@ const Login = () => {
         email:'',
         password: '',
     })
+    const [formErrors, setFormErrors] = useState({})
+   
     
-    const { setLoggedUser, setLogged, setLoggedNewUser } = useApi()
+    const { setLoggedUser, setLogged, setLoggedNewUser, setLoggedOut } = useApi()
 
     const handleSee = (e) => {
         e.preventDefault()
         setSee(!see)
     }
 
+    const validateForm = (values) => {
+        const errors = {}
+         if(values.email === '') {
+           errors.email = "Not a valid email"
+         }
+       
+         if(values.password === '') {
+           errors.password = "not a valid password"
+         }
+       
+         return errors
+       }
+
     const handleSubmitForm = (e) => {
         e.preventDefault()
+        setFormErrors(validateForm(user))
+      
+
         axios({
             method: 'POST',
             url: "http://localhost:8888/api/loginProcess",
@@ -41,6 +63,8 @@ const Login = () => {
             setLoggedUser(res.data.id)
             setLoggedNewUser(res.data)
             sessionStorage.setItem("token", res.data.id)
+            setLoggedOut(true)
+            
             navigate('/balance')
         })
      }
@@ -54,9 +78,14 @@ const Login = () => {
     action=""
     >
         <label htmlFor="" >Email</label>
+        <span className='expense_error'>{formErrors.email}</span>
         <input type="text" onChange={(e) => setUser({...user, email: e.target.value})}/>
         <label htmlFor="">Password</label>
+        <span className='expense_error'>{formErrors.password}</span>
+        <div className='password'>
         <input type={see ? "text" : "password"} onChange={(e) => setUser({...user, password: e.target.value})} />
+        <img onClick={handleSee}className="password_eye" src={!see ? Eye : Hidden} alt="" />
+        </div>
 
         <button type='submit'>Submit</button>
     </form>

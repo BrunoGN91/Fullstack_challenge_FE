@@ -69,9 +69,7 @@ const handleSubmit = (e) => {
     
 useEffect(() => {
     if(Object.keys(formErrors).length === 0 && submitForm) {
-      console.log("submit");
-      console.log(formErrors);
-      console.log(submitForm);
+      
       axios({
            method: "POST",
            url: "http://localhost:8888/api/setNewValue",
@@ -245,11 +243,11 @@ if(editOldBalance.description === '') {
         onClick={handleExit}
         className='close_icon'><img src={Cancel} alt="" /></button>
             <div className='operation_option_expense'>
-            <input type="checkbox" id="operationCheckBox1" onChange={() => setNewExpense(true)}/>
+            <input type="checkbox" id="operationCheckBox1" onChange={() => {setNewExpense(true), setNewOperation(false)}}/>
                 <label htmlFor="" for="operationCheckBox1">Expense</label>
                 </div>
             <div className='operation_option_balance'>
-            <input type="checkbox" id="operationCheckBox2" onChange={() => setNewBalance(true)}/>
+            <input type="checkbox" id="operationCheckBox2" onChange={() => {setNewBalance(true), setNewOperation(false)}}/>
                 <label htmlFor="" for="operationCheckBox2" >Balance</label>
                 </div>
         </div>
@@ -263,6 +261,9 @@ if(editOldBalance.description === '') {
           action=""
           onSubmit={handleAddBalance}
           >
+          <button
+            onClick={handleExit}
+            className='close_icon'><img src={Cancel} alt="" /></button>
             <label htmlFor="">Description</label>
             <input type="text" onChange={(e) => {setAddBalance({...addBalance, description: e.target.value})}}/>
               <label htmlFor="">Balance</label>

@@ -47,11 +47,11 @@ const OperationsList = ({ list, spinner, setEditExpense, setEditBalance }) => {
       {list.length !== 0 ? (
         <>
         <div className='expense_items_titles'>
-          <h2>Name</h2>
+          <h3>Name</h3>
           <h3>Price</h3>
           <h3>Category</h3>
-          <h3>Time</h3>
-          <h4>Actions</h4>
+          <h3 className='operations_time'>Time</h3>
+          <h3>Actions</h3>
         </div>
         </>
       ) : <h2>Nothing</h2>}
@@ -75,7 +75,8 @@ const OperationsList = ({ list, spinner, setEditExpense, setEditBalance }) => {
                   item.category === "add_balance" ? Balance : null
       } alt="" />
       </div>
-        <h4 className={item.category === "add_balance" ? "added_balance" : 'added_expense'}>{(new Date(item.lastUpdated)).toLocaleDateString('en-US')}</h4>
+        <h4 className={item.category === "add_balance" ? "added_balance operations_time" : 'added_expense operations_time'}>{(new Date(item.lastUpdated)).toLocaleDateString('en-US')}</h4>
+        <div className='operations_buttons'>
         <button
         className='edit_button'
         onClick={() => {item.category !== 'add_balance' ? setEditExpense(item) : setEditBalance(item)}}
@@ -84,6 +85,7 @@ const OperationsList = ({ list, spinner, setEditExpense, setEditBalance }) => {
          className='remove_button'
             onClick={() => handleRemoveExpense(item.id)}
         >Remove</button>
+        </div>
         </div>
         </>
     )) ) : null}
