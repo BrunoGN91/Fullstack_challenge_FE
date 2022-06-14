@@ -55,7 +55,7 @@ const Login = () => {
 
         axios({
             method: 'POST',
-            url: process.env.VITE_URL || "http://localhost:8888/api/loginProcess",
+            url: `${process.env.VITE_URL}/loginProcess` || "http://localhost:8888/api/loginProcess",
             headers: axiosConfig,
             data: JSON.stringify(user)
         }).then(res => {
