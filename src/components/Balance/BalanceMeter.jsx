@@ -67,7 +67,7 @@ useEffect(() => {
     e.preventDefault()
     axios({
       method: "PUT",
-      url: `${process.env.VITE_URL}/editInitialBalance`,
+      url: `${import.meta.env.VITE_URL}/editInitialBalance`,
       headers: axiosConfig,
       data: JSON.stringify({
         newBalance: updatedInitialBalance,

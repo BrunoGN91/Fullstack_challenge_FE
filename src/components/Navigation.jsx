@@ -31,7 +31,7 @@ const Navigation = () => {
   
     axios({
         method: 'GET',
-        url: `${process.env.VITE_URL}/users/${logged}`,
+        url: `${import.meta.env.VITE_URL}/users/${logged}`,
         headers: axiosConfig,
     }).then(res => {
        console.log(res.data);

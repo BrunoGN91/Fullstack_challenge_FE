@@ -55,7 +55,7 @@ const Login = () => {
 
         axios({
             method: 'POST',
-            url: `${process.env.VITE_URL}/loginProcess`,
+            url: `${import.meta.env.VITE_URL}/loginProcess`,
             headers: axiosConfig,
             data: JSON.stringify(user)
         }).then(res => {

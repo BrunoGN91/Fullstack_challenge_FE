@@ -72,7 +72,7 @@ useEffect(() => {
       
       axios({
            method: "POST",
-           url: `${process.env.VITE_URL}/setNewValue`,
+           url: `${import.meta.env.VITE_URL}/setNewValue`,
            headers: axiosConfig,
            data: JSON.stringify({...expense, category: category, users_fk: loggedNewUser.id})
         }).then(res => {
@@ -115,7 +115,7 @@ const handleChanges = (e) => {
   
        axios({
             method: "POST",
-            url: `${process.env.VITE_URL}/updateOperation`,
+            url: `${import.meta.env.VITE_URL}/updateOperation`,
             headers: axiosConfig,
             data: JSON.stringify(expenseUpdate)
          }).then(res => {
@@ -161,7 +161,7 @@ const handleAddBalance = () => {
     } else {
       axios({
         method: "POST",
-        url: `${process.env.VITE_URL}/setNewValue`,
+        url: `${import.meta.env.VITE_URL}/setNewValue`,
         headers: axiosConfig,
         data: JSON.stringify({
           ...addBalance,
@@ -209,7 +209,7 @@ if(editOldBalance.description === '') {
 } else { 
   axios({
     method: "POST",
-    url: `${process.env.VITE_URL}/updateOperation`,
+    url: `${import.meta.env.VITE_URL}/updateOperation`,
     headers: axiosConfig,
     data: JSON.stringify(editOldBalance)
   }).then(res => {

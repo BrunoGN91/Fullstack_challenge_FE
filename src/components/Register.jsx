@@ -77,7 +77,7 @@ const Register = () => {
             
             axios({
                     method: "POST",
-                    url: `${process.env.VITE_URL}/apiPost`,
+                    url: `${import.meta.env.VITE_URL}/apiPost`,
                     data: JSON.stringify(user),
                     headers: axiosConfig
             }).then(res => {
