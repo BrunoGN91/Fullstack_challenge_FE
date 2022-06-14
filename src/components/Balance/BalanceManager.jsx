@@ -38,7 +38,7 @@ useEffect(() => {
     try {
       let data = await axios({
         method: "GET",
-        url: `${import.meta.env.VITE_URL}/usersOperations/${loggedNewUser.id}`,
+        url: `${import.meta.env.VITE_API_URL}/usersOperations/${loggedNewUser.id}`,
         headers: axiosConfig
       })
       setList(data.data)
@@ -57,7 +57,7 @@ useEffect(() => {
       try {
           let awaitData = await axios({
             method: "POST",
-            url: `${import.meta.env.VITE_URL}/setOperationList`,
+            url: `${import.meta.env.VITE_API_URL}/setOperationList`,
             headers: axiosConfig,
             data: JSON.stringify(logged)
         })
@@ -77,7 +77,7 @@ useEffect(() => {
   setTimeout(() => {
     axios({
       method: 'GET',
-      url: `${import.meta.env.VITE_URL}/users/${loggedUser}`,
+      url: `${import.meta.env.VITE_API_URL}/users/${loggedUser}`,
       headers: axiosConfig,
         }).then(res => {
       setLoggedNewUser(res.data)

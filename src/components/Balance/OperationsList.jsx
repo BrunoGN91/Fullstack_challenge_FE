@@ -29,7 +29,7 @@ const OperationsList = ({ list, spinner, setEditExpense, setEditBalance }) => {
     const handleRemoveExpense = (id) => {
         axios({
             method: "DELETE",
-            url: `${import.meta.env.VITE_URL}/operationList/${id}`,
+            url: `${import.meta.env.VITE_API_URL}/operationList/${id}`,
             headers: axiosConfig,
             data: JSON.stringify(loggedUser)
         }).then(res => {
