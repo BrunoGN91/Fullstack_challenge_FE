@@ -29,7 +29,7 @@ const NewBalance = () => {
             
             axios({
                 method: 'POST',
-                url: `${process.env.VITE_URL}/setNewBalance` || "http://localhost:8888/api/setNewBalance",
+                url: `${process.env.VITE_URL}/setNewBalance`,
                 headers: axiosConfig,
                 data: JSON.stringify({
                     total: balance,
