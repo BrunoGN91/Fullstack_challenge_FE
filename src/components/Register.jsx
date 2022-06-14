@@ -77,7 +77,7 @@ const Register = () => {
             let URL_ENDPOINT = "http://localhost:8888/api/apiPost"
             axios({
                     method: "POST",
-                    url: URL_ENDPOINT,
+                    url: process.env.VITE_URL || URL_ENDPOINT,
                     data: JSON.stringify(user),
                     headers: axiosConfig
             }).then(res => {

@@ -38,7 +38,7 @@ useEffect(() => {
     try {
       let data = await axios({
         method: "GET",
-        url: `http://localhost:8888/api/usersOperations/${loggedNewUser.id}`,
+        url: process.env.VITE_URL || `http://localhost:8888/api/usersOperations/${loggedNewUser.id}`,
         headers: axiosConfig
       })
       setList(data.data)
@@ -57,7 +57,7 @@ useEffect(() => {
       try {
           let awaitData = await axios({
             method: "POST",
-            url: "http://localhost:8888/api/setOperationList",
+            url: process.env.VITE_URL || "http://localhost:8888/api/setOperationList",
             headers: axiosConfig,
             data: JSON.stringify(logged)
         })
@@ -77,7 +77,7 @@ useEffect(() => {
   setTimeout(() => {
     axios({
       method: 'GET',
-      url: `http://localhost:8888/api/users/${loggedUser}`,
+      url: process.env.VITE_URL || `http://localhost:8888/api/users/${loggedUser}`,
       headers: axiosConfig,
         }).then(res => {
       setLoggedNewUser(res.data)

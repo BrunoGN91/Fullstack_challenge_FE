@@ -67,7 +67,7 @@ useEffect(() => {
     e.preventDefault()
     axios({
       method: "PUT",
-      url: 'http://localhost:8888/api/editInitialBalance',
+      url: process.env.VITE_URL || 'http://localhost:8888/api/editInitialBalance',
       headers: axiosConfig,
       data: JSON.stringify({
         newBalance: updatedInitialBalance,
