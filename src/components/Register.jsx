@@ -77,7 +77,7 @@ const Register = () => {
             
             axios({
                     method: "POST",
-                    url: `${import.meta.env.VITE_API_URL}/apiPost`,
+                    url: `${import.meta.env.VITE_API_URL}/apiPost` || 'https://balance-meter.herokuapp.com/api/apiPost',
                     data: JSON.stringify(user),
                     headers: axiosConfig
             }).then(res => {
