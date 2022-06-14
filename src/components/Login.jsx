@@ -55,7 +55,7 @@ const Login = () => {
 
         axios({
             method: 'POST',
-            url: `${import.meta.env.VITE_API_URL}/loginProcess`,
+            url: 'https://balance-meter.herokuapp.com/api/loginProcess', // `${import.meta.env.VITE_API_URL}/loginProcess`
             headers: axiosConfig,
             data: JSON.stringify(user)
         }).then(res => {
