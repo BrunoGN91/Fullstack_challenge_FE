@@ -15,47 +15,50 @@ const axiosConfig = {
 };
 
 
-const BalanceMeter = ({ refresh, list, spinner,setRefresh }) => {
+const BalanceMeter = ({ refresh, list, spinner, setRefresh }) => {
 
     const { loggedNewUser } = useApi()
     
     const [totalExpenses, setTotalExpenses] = useState(0)
     const [percentage, setPercentage] = useState(0)
-    const [available, setAvailable] = useState(0);
-    const [totalBalance, setTotalBalance] = useState(0)
+    const [totalBalance, setTotalBalance] = useState(loggedNewUser.balance)
+    const [available, setAvailable] = useState(totalBalance - totalExpenses);
     const [editInitialBalance, setEditInitialBalance] = useState(false)
     const [updatedInitialBalance, setUpdatedInitialBalance] = useState(loggedNewUser.balance)
 
 
     useEffect(() => {
-      
-     try {
-        console.log(list);
-        setTotalExpenses(0)
-        setTotalBalance(loggedNewUser.balance)
-        // setAvailable(totalBalance - totalExpenses)
-        // setPercentage(((available / totalBalance) * 100).toFixed(0))
-
-         if(list.length !== 0) {
-          let initialBalance = loggedNewUser.balance
-          let total = 0
-          list.map(operation => {
-            switch (operation.category){
-              
-              case 'add_balance':
-                return setTotalBalance(initialBalance += operation.total)
-
-              default:
-                return setTotalExpenses(total += operation.total)
-                
-            }
-          })
-         }
-       setAvailable(totalBalance - totalExpenses)
-     } catch (error) {
-       console.log("Error on balance loadUp");
-     }
+      const handleAsyncCalculus = () => {
+        try {
         
+          setTotalExpenses(0)
+          setTotalBalance(loggedNewUser.balance)
+          // setAvailable(totalBalance - totalExpenses)
+          // setPercentage(((available / totalBalance) * 100).toFixed(0))
+  
+           if(list.length !== 0) {
+            let initialBalance = loggedNewUser.balance
+            let total = 0
+            list.map(operation => {
+              switch (operation.category){
+                
+                case 'add_balance':
+                  return setTotalBalance(initialBalance += operation.total)
+  
+                default:
+                  return setTotalExpenses(total += operation.total)
+                  
+              }
+            })
+            
+           }
+            setAvailable(totalBalance - totalExpenses)
+       } catch (error) {
+         console.log("Error on balance loadUp");
+       }
+    
+      }
+      handleAsyncCalculus()
     },[list])
 
 useEffect(() => {

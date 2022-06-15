@@ -28,11 +28,6 @@ const [spinner, setSpinner] = useState(false);
 const [editExpense, setEditExpense] = useState({})
 const [editBalance, setEditBalance] = useState({})
 
-
-
-
- 
-
 useEffect(() => {
   const handleInitialFetch = async () => {
     try {
@@ -85,7 +80,6 @@ useEffect(() => {
   },500)
 
 },[refresh])
-
 
   return (
     <>

@@ -48,27 +48,25 @@ const Login = () => {
          return errors
        }
 
-    const handleSubmitForm = (e) => {
-        e.preventDefault()
-        setFormErrors(validateForm(user))
-      
-
-        axios({
-            method: 'POST',
-            url: `${import.meta.env.VITE_API_URL}/loginProcess`, //  'https://balance-meter.herokuapp.com/api/loginProcess'
-            headers: axiosConfig,
-            data: JSON.stringify(user)
-        }).then(res => {
-            
-            setLoggedUser(res.data.id)
-            setLoggedNewUser(res.data)
-            sessionStorage.setItem("token", res.data.id)
+    const handleSubmitForm = async (e)  => {
+        try {
+            e.preventDefault()
+            setFormErrors(validateForm(user))
+            const loginSend = await axios({
+                method: 'POST',
+                url: `${import.meta.env.VITE_API_URL}/loginProcess`, //  'https://balance-meter.herokuapp.com/api/loginProcess'
+                headers: axiosConfig,
+                data: JSON.stringify(user)
+            })
+            setLoggedUser(loginSend.data.id)
+            setLoggedNewUser(loginSend.data)
+            sessionStorage.setItem("token", loginSend.data.id)
             setLoggedOut(true)
-            
             navigate('/balance')
-        }).catch(e => {
-            console.log("error Login");
-        })
+            
+        } catch (error) {
+            
+        }
      }
     
   return (

@@ -21,25 +21,26 @@ const Navigation = () => {
 
 
 
-  const { loggedNewUser, setLoggedNewUser, setLoggedUser, setLoggedOut, loggedOut } = useApi()
+  const { loggedNewUser, setLoggedNewUser, setLoggedUser, setLoggedOut, loggedOut, refresh, loggedUser } = useApi()
 
   
   const logged = sessionStorage.getItem("token")
 
   useEffect(() => {
-    
-  
+
     axios({
-        method: 'GET',
-        url: `${import.meta.env.VITE_API_URL}/users/${logged}`,
-        headers: axiosConfig,
-    }).then(res => {
-       console.log(res.data);
-       setLoggedUser(res.data.id)
-       setLoggedNewUser(res.data)
- })
+      method: 'GET',
+      url: `${import.meta.env.VITE_API_URL}/users/${logged}`,
+      headers: axiosConfig,
+  }).then(res => {
+     setLoggedUser(res.data.id)
+     setLoggedNewUser(res.data)
+     setLoggedOut(true)
+}).catch(e => {
+  console.log("error in navigation");
+})
   
-  },[])
+  }, [])
 
   const handleLogOut = () => {
     sessionStorage.removeItem("token");
@@ -61,7 +62,7 @@ const Navigation = () => {
         <Route exact path='/' component={Navigation} element={loggedNewUser !== null ? <Home /> : null} /> 
         <Route path='/register' element={<Register/>} />
         <Route path='/login' element={!loggedOut ? <Login/> : <NotFound />} />
-        <Route path='/balance' element={loggedNewUser.balance ? <BalanceManager/> : <NotFound />} />
+        <Route path='/balance' element={loggedNewUser.balance !== undefined ? <BalanceManager/> : <NotFound />} />
 
     </Routes>
     </BrowserRouter>

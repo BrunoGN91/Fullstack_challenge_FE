@@ -586,10 +586,20 @@ button {
 }
 
 .new_balance button {
-    padding: 5px;
-    text-transform: uppercase;
     margin-top: 20px;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 10px;
+    background-color: white;
+    cursor: pointer
     
+}
+
+.new_balance button:hover {
+    background-color: #3b82f6;
+    color: white;
+    cursor: pointer;
 }
 
 /* Balance Meter */
