@@ -36,6 +36,7 @@ const Register = () => {
     })
     const [formErrors, setFormErrors] = useState({})
     const [submitForm, setSubmitForm] = useState(false)
+    const [repeat, setRepeat] = useState({})
 
     const handleRedirect = (e) => {
         history.push('/')
@@ -52,43 +53,44 @@ const Register = () => {
 
 
       
-    const validateForm = (values) => {
-        const errors = {}
-         if(values.email === '') {
-           errors.email = "Not a valid email"
-         }
-       
-         if(values.password === '') {
-           errors.password = "Password cant be empty"
-         }
-         if(values.repassword !== values.password) {
-            errors.repassword = "Passwords must match"
-         }
-       
-         return errors
+    const validateForm = async (e) => {
+        e.preventDefault()
+        try {
+                const errors = {}
+                if(user.email === '') {
+                  errors.email = "Not a valid email"
+                }
+              
+                if(user.password === '') {
+                  errors.password = "Password cant be empty"
+                }
+                if(user.repassword !== user.password) {
+                   errors.repassword = "Passwords must match"
+                }
+                setFormErrors(errors)
+            if(Object.keys(errors).length === 0) {
+            const data = await axios({
+                                        method: "POST",
+                                        url: `${import.meta.env.VITE_API_URL}/apiPost`,
+                                        data: JSON.stringify(user),
+                                        headers: axiosConfig
+                                    })
+                    if(data.data === "duplicate") {
+                        return setRepeat(data)
+                     } else {
+                        return navigate('/')
+                     }
+                     
+                } 
+        } catch (error) {
+            console.log("error in reg");
+        }
        }
 
     const handleSubmitForm = (e) => {
        e.preventDefault()
        setFormErrors(validateForm(user))
-       setSubmitForm(true)
-       if(Object.keys(formErrors).length === 0 && submitForm) {
-        const sendForm = () => {
-            
-            axios({
-                    method: "POST",
-                    url: `${import.meta.env.VITE_API_URL}/apiPost`,
-                    data: JSON.stringify(user),
-                    headers: axiosConfig
-            }).then(res => {
-                return res
-                     }).catch(err => console.log("error"))
-            }
-            sendForm()
-            navigate('/')
-            setFormErrors({})
-            setSubmitForm(false)
-        }
+    
        }
       
 
@@ -96,12 +98,14 @@ const Register = () => {
     <>
     <div className='register'>
     <form
-    onSubmit={handleSubmitForm}
+    onSubmit={validateForm}
     className="register_form"
     action=""
     >
         <label htmlFor="" >Email</label>
         <span className='expense_error'>{formErrors.email}</span>
+       {Object.keys(repeat).length !== 0 ? ( <span className='expense_error'>Email already exists</span> ) : null}
+
         <input type="text" onChange={(e) => setUser({...user, email: e.target.value})}/>
         <label htmlFor="">Password</label>
         <span className='expense_error'>{formErrors.password}</span>

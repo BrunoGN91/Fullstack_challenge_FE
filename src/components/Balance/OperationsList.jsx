@@ -54,7 +54,7 @@ const OperationsList = ({ list, spinner, setEditExpense, setEditBalance }) => {
           <h3>Actions</h3>
         </div>
         </>
-      ) : <h2>Nothing</h2>}
+      ) : <h2>You have no operations. Start your balance!</h2>}
     {spinner ? (
       list.map(item => (
         <>
