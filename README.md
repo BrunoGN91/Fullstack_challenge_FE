@@ -1,6 +1,8 @@
 
 # Fullstack Challenge Frontend
 
+https://balance-meter-challenge.netlify.app/
+
 Built in React using VITE, conecting to a Nodejs Server built with Express using REST Api connections
 
 Works in connection with its server-side partner https://github.com/BrunoGN91/Fullstack_challenge_BE built in Node.js
@@ -12,19 +14,19 @@ to its partner in the heroku app.
 
 In order to start testing in a local enviroment you should:
 
-Replace the .env file
+Replace the .env.example file
 
 ```bash
-.env.development
+.env.example
 ```
 
 with
 
 ```bash
-.env.local
+.env
 ```
 
-so that you use your own local ports.
+And add the port from where you will fetch the server side APIS, at 'http://localhost:8888'. 
 
 ## Installation
 
